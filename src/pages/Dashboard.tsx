@@ -36,20 +36,6 @@ const Dashboard = () => {
     setFilteredServices(filtered);
   };
   
-  const handleReorderServices = (categoryName: string, reorderedServices: Service[]) => {
-    const updatedLayout = [...serviceLayout];
-    
-    // Replace services in the specified category with reordered ones
-    reorderedServices.forEach(service => {
-      const index = updatedLayout.findIndex(s => s.id === service.id);
-      if (index !== -1) {
-        updatedLayout[index] = service;
-      }
-    });
-    
-    setServiceLayout(updatedLayout);
-  };
-  
   const handleUpdateService = (id: string, updatedService: Partial<Service>) => {
     const updatedLayout = serviceLayout.map(service => 
       service.id === id ? { ...service, ...updatedService } : service
@@ -80,7 +66,7 @@ const Dashboard = () => {
                   title={category}
                   services={filteredServices.filter(s => s.category === category)}
                   isEditing={isEditingLayout}
-                  onReorderServices={handleReorderServices}
+                  allCategories={categories}
                   onUpdateService={handleUpdateService}
                 />
               ))}
