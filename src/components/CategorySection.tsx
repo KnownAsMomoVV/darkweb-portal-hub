@@ -8,7 +8,7 @@ interface CategorySectionProps {
   title: string;
   services: Service[];
   isEditing: boolean;
-  allCategories: string[];
+  onReorderServices: (categoryName: string, reorderedServices: Service[]) => void;
   onUpdateService: (id: string, updatedService: Partial<Service>) => void;
 }
 
@@ -16,11 +16,12 @@ const CategorySection = ({
   title, 
   services, 
   isEditing, 
-  allCategories,
+  onReorderServices,
   onUpdateService 
 }: CategorySectionProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [categoryServices, setCategoryServices] = useState<Service[]>(services);
+  const [draggedService, setDraggedService] = useState<string | null>(null);
   
   // Update local state when services prop changes
   useEffect(() => {
@@ -28,6 +29,35 @@ const CategorySection = ({
   }, [services]);
 
   if (services.length === 0) return null;
+  
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+    setDraggedService(id);
+    e.dataTransfer.setData('text/plain', id); // Set data to be transferred
+  };
+  
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+  
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetId: string) => {
+    e.preventDefault();
+    
+    if (draggedService === null || draggedService === targetId) return;
+    
+    const sourceIndex = categoryServices.findIndex(service => service.id === draggedService);
+    const targetIndex = categoryServices.findIndex(service => service.id === targetId);
+    
+    if (sourceIndex === -1 || targetIndex === -1) return;
+    
+    const newServicesList = [...categoryServices];
+    const [movedService] = newServicesList.splice(sourceIndex, 1);
+    newServicesList.splice(targetIndex, 0, movedService);
+    
+    setCategoryServices(newServicesList);
+    onReorderServices(title, newServicesList);
+    setDraggedService(null);
+  };
   
   const handleUpdateService = (id: string, updatedService: Partial<Service>) => {
     onUpdateService(id, updatedService);
@@ -52,7 +82,9 @@ const CategorySection = ({
               key={service.id}
               {...service}
               isEditing={isEditing}
-              allCategories={allCategories}
+              onDragStart={handleDragStart}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
               onUpdate={handleUpdateService}
             />
           ))}

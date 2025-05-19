@@ -8,13 +8,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 
 interface DraggableServiceCardProps extends Service {
   isEditing: boolean;
-  allCategories: string[];
+  onDragStart: (e: React.DragEvent<HTMLDivElement>, id: string) => void;
+  onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
+  onDrop: (e: React.DragEvent<HTMLDivElement>, id: string) => void;
   onUpdate?: (id: string, updatedService: Partial<Service>) => void;
 }
 
@@ -26,9 +27,12 @@ const DraggableServiceCard = ({
   url,
   category,
   isEditing,
-  allCategories,
+  onDragStart,
+  onDragOver,
+  onDrop,
   onUpdate
 }: DraggableServiceCardProps) => {
+  const [isDragging, setIsDragging] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const { toast } = useToast();
   
@@ -36,10 +40,30 @@ const DraggableServiceCard = ({
     defaultValues: {
       name,
       description,
-      url,
-      category
+      url
     }
   });
+  
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    onDragStart(e, id);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+  
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
+  
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    onDragOver(e);
+  };
+  
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    onDrop(e, id);
+  };
   
   const handleEditSubmit = (data: any) => {
     if (onUpdate) {
@@ -54,17 +78,31 @@ const DraggableServiceCard = ({
   
   return (
     <>
-      <div className={cn(
-        "transition-all duration-300",
-        isEditing && "relative"
-      )}>
+      <div
+        draggable={isEditing}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        className={cn(
+          "transition-all duration-300",
+          isEditing && "cursor-grab",
+          isDragging && "opacity-50",
+          isEditing && "relative"
+        )}
+      >
         {isEditing && (
-          <button 
-            className="absolute top-2 right-2 bg-primary/80 p-1.5 rounded-full z-10 hover:bg-primary transition-colors"
-            onClick={() => setShowEditDialog(true)}
-          >
-            <Edit size={14} className="text-white" />
-          </button>
+          <>
+            <div className="absolute -top-2 -right-2 bg-secondary text-xs px-2 py-1 rounded-full z-10">
+              Drag to rearrange
+            </div>
+            <button 
+              className="absolute top-2 right-2 bg-primary/80 p-1.5 rounded-full z-10 hover:bg-primary transition-colors"
+              onClick={() => setShowEditDialog(true)}
+            >
+              <Edit size={14} className="text-white" />
+            </button>
+          </>
         )}
         <ServiceCard
           id={id}
@@ -122,33 +160,6 @@ const DraggableServiceCard = ({
                         <Input {...field} />
                       </div>
                     </FormControl>
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <Select 
-                      onValueChange={field.onChange} 
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Category" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {allCategories.map((cat) => (
-                          <SelectItem key={cat} value={cat}>
-                            {cat}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
                   </FormItem>
                 )}
               />
