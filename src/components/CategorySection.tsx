@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import DraggableServiceCard from './DraggableServiceCard';
 import { Service } from '@/types/service';
@@ -9,21 +9,35 @@ interface CategorySectionProps {
   services: Service[];
   isEditing: boolean;
   onReorderServices: (categoryName: string, reorderedServices: Service[]) => void;
+  onUpdateService: (id: string, updatedService: Partial<Service>) => void;
 }
 
-const CategorySection = ({ title, services, isEditing, onReorderServices }: CategorySectionProps) => {
+const CategorySection = ({ 
+  title, 
+  services, 
+  isEditing, 
+  onReorderServices,
+  onUpdateService 
+}: CategorySectionProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [categoryServices, setCategoryServices] = useState<Service[]>(services);
   const [draggedService, setDraggedService] = useState<string | null>(null);
+  
+  // Update local state when services prop changes
+  useEffect(() => {
+    setCategoryServices(services);
+  }, [services]);
 
   if (services.length === 0) return null;
   
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
     setDraggedService(id);
+    e.dataTransfer.setData('text/plain', id); // Set data to be transferred
   };
   
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
   };
   
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetId: string) => {
@@ -43,6 +57,10 @@ const CategorySection = ({ title, services, isEditing, onReorderServices }: Cate
     setCategoryServices(newServicesList);
     onReorderServices(title, newServicesList);
     setDraggedService(null);
+  };
+  
+  const handleUpdateService = (id: string, updatedService: Partial<Service>) => {
+    onUpdateService(id, updatedService);
   };
   
   return (
@@ -67,6 +85,7 @@ const CategorySection = ({ title, services, isEditing, onReorderServices }: Cate
               onDragStart={handleDragStart}
               onDragOver={handleDragOver}
               onDrop={handleDrop}
+              onUpdate={handleUpdateService}
             />
           ))}
         </div>

@@ -50,6 +50,14 @@ const Dashboard = () => {
     setServiceLayout(updatedLayout);
   };
   
+  const handleUpdateService = (id: string, updatedService: Partial<Service>) => {
+    const updatedLayout = serviceLayout.map(service => 
+      service.id === id ? { ...service, ...updatedService } : service
+    );
+    
+    setServiceLayout(updatedLayout);
+  };
+  
   return (
     <div className="min-h-screen pb-12 transition-all duration-300">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
@@ -73,6 +81,7 @@ const Dashboard = () => {
                   services={filteredServices.filter(s => s.category === category)}
                   isEditing={isEditingLayout}
                   onReorderServices={handleReorderServices}
+                  onUpdateService={handleUpdateService}
                 />
               ))}
             </>
