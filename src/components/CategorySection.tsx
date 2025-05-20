@@ -25,6 +25,7 @@ const CategorySection = ({
 }: CategorySectionProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [categoryServices, setCategoryServices] = useState<Service[]>(services);
+  const [draggedItemId, setDraggedItemId] = useState<string | null>(null);
   
   // Update local state when services prop changes
   useEffect(() => {
@@ -35,6 +36,39 @@ const CategorySection = ({
   
   const handleUpdateService = (id: string, updatedService: Partial<Service>) => {
     onUpdateService(id, updatedService);
+  };
+  
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+    setDraggedItemId(id);
+    e.dataTransfer.setData('text/plain', id);
+  };
+  
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+  
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetId: string) => {
+    e.preventDefault();
+    
+    if (!draggedItemId || draggedItemId === targetId) {
+      return;
+    }
+    
+    const newOrder = [...categoryServices];
+    const draggedItemIndex = newOrder.findIndex(service => service.id === draggedItemId);
+    const targetIndex = newOrder.findIndex(service => service.id === targetId);
+    
+    if (draggedItemIndex === -1 || targetIndex === -1) {
+      return;
+    }
+    
+    // Reorder the services
+    const [draggedItem] = newOrder.splice(draggedItemIndex, 1);
+    newOrder.splice(targetIndex, 0, draggedItem);
+    
+    setCategoryServices(newOrder);
+    onReorderServices(title, newOrder);
+    setDraggedItemId(null);
   };
   
   return (
@@ -56,9 +90,9 @@ const CategorySection = ({
               key={service.id}
               {...service}
               isEditing={isEditing}
-              onDragStart={() => {}}
-              onDragOver={() => {}}
-              onDrop={() => {}}
+              onDragStart={handleDragStart}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
               onUpdate={handleUpdateService}
               styleClass={cardStyleClass}
               animationClass={animationClass}

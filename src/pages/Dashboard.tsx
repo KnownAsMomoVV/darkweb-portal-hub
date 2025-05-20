@@ -96,6 +96,18 @@ const Dashboard = () => {
     setCategoryLayout(newCategories);
   };
   
+  const handleReorderServices = (categoryName: string, reorderedServices: Service[]) => {
+    // Find all services that are not in this category
+    const otherServices = serviceLayout.filter(
+      service => service.category !== categoryName
+    );
+    
+    // Merge the reordered services with other services
+    const newServices = [...otherServices, ...reorderedServices];
+    
+    setServiceLayout(newServices);
+  };
+  
   // Generate CSS classes based on settings
   const getCardStyleClass = () => {
     const classes = ['transition-all duration-300'];
@@ -151,7 +163,7 @@ const Dashboard = () => {
                   title={category}
                   services={filteredServices.filter(s => s.category === category)}
                   isEditing={isEditingLayout}
-                  onReorderServices={() => {}}
+                  onReorderServices={handleReorderServices}
                   onUpdateService={handleUpdateService}
                   cardStyleClass={getCardStyleClass()}
                   animationClass={getAnimationClass()}
