@@ -9,9 +9,18 @@ interface ServiceCardProps {
   icon: React.ReactNode;
   url: string;
   category: string;
+  styleClass?: string;
+  animationClass?: string;
 }
 
-const ServiceCard = ({ name, description, icon, url }: ServiceCardProps) => {
+const ServiceCard = ({ 
+  name, 
+  description, 
+  icon, 
+  url, 
+  styleClass = "", 
+  animationClass = "animate-scale-in" 
+}: ServiceCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   
   return (
@@ -21,8 +30,9 @@ const ServiceCard = ({ name, description, icon, url }: ServiceCardProps) => {
       rel="noopener noreferrer"
       className={cn(
         "glass-card p-5 rounded-lg flex flex-col items-center text-center transition-all duration-300",
-        "hover:bg-white/10 hover:scale-[1.02] hover:shadow-lg group",
-        "animate-scale-in"
+        "hover:bg-white/10 hover:shadow-lg group",
+        animationClass,
+        styleClass
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
