@@ -5,7 +5,6 @@ import LayoutEditor from '@/components/LayoutEditor';
 import services from '@/data/services';
 import { Service } from '@/types/service';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { useTheme } from '@/context/ThemeContext';
 
 const Dashboard = () => {
   // Load custom layout from local storage if available
@@ -15,7 +14,6 @@ const Dashboard = () => {
   const [filteredServices, setFilteredServices] = useState<Service[]>(serviceLayout);
   const [categories, setCategories] = useState<string[]>([]);
   const [isEditingLayout, setIsEditingLayout] = useState(false);
-  const { currentTheme } = useTheme();
   
   // Group services by category and set up categories
   useEffect(() => {
@@ -50,9 +48,8 @@ const Dashboard = () => {
       service.id === id ? { 
         ...service, 
         ...updatedService,
-        // If we have an icon name, use it, otherwise keep the original icon
-        icon: updatedService.icon || serviceToUpdate.icon,
-        iconColor: `text-${currentTheme.value}-primary`
+        // Keep the original icon reference to maintain compatibility
+        icon: serviceToUpdate.icon
       } : service
     );
     
