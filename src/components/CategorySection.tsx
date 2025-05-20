@@ -50,12 +50,7 @@ const CategorySection = ({
           {categoryServices.map((service) => (
             <DraggableServiceCard
               key={service.id}
-              id={service.id}
-              name={service.name}
-              description={service.description}
-              icon={service.icon}
-              url={service.url}
-              category={service.category}
+              {...service}
               isEditing={isEditing}
               onDragStart={() => {}}
               onDragOver={() => {}}
