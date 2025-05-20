@@ -129,6 +129,12 @@ const Dashboard = () => {
     }
   };
   
+  // Function to handle reordering services within a category
+  const handleReorderServices = (categoryName: string, reorderedServices: Service[]) => {
+    // This is a placeholder for the actual implementation
+    console.log(`Reordering services in ${categoryName}`, reorderedServices);
+  };
+  
   return (
     <div className={`min-h-screen pb-12 transition-all duration-300`}>
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
@@ -151,10 +157,8 @@ const Dashboard = () => {
                   title={category}
                   services={filteredServices.filter(s => s.category === category)}
                   isEditing={isEditingLayout}
-                  onReorderServices={() => {}}
+                  onReorderServices={handleReorderServices}
                   onUpdateService={handleUpdateService}
-                  cardStyleClass={getCardStyleClass()}
-                  animationClass={getAnimationClass()}
                 />
               ))}
             </>
