@@ -17,7 +17,7 @@ const services: Service[] = [
     name: 'Time Tracker',
     description: 'Track time for honorary work',
     icon: <Calendar className="h-7 w-7" />,
-    url: 'https://timetracker.example.com',
+    url: 'https://time.momoh.de',
     category: 'Productivity'
   },
   {
@@ -25,7 +25,7 @@ const services: Service[] = [
     name: 'Wishlist',
     description: 'Keep track of wanted items',
     icon: <ShoppingCart className="h-7 w-7" />,
-    url: 'https://wishlist.example.com',
+    url: 'https://wish.momoh.de',
     category: 'Personal'
   },
   {
@@ -33,7 +33,7 @@ const services: Service[] = [
     name: 'Portainer',
     description: 'Container management',
     icon: <Monitor className="h-7 w-7" />,
-    url: 'https://portainer.example.com',
+    url: 'https://port.momoh.de',
     category: 'Infrastructure'
   },
   {
@@ -41,7 +41,7 @@ const services: Service[] = [
     name: 'Portfolio',
     description: 'Personal portfolio site',
     icon: <Image className="h-7 w-7" />,
-    url: 'https://portfolio.example.com',
+    url: 'https://momoh.de',
     category: 'Personal'
   },
   {
@@ -49,7 +49,7 @@ const services: Service[] = [
     name: 'Database',
     description: 'Database management',
     icon: <Database className="h-7 w-7" />,
-    url: 'https://database.example.com',
+    url: 'https://db.momoh.de/_/',
     category: 'Infrastructure'
   },
   {
@@ -57,7 +57,7 @@ const services: Service[] = [
     name: 'Bitwarden',
     description: 'Password manager',
     icon: <Lock className="h-7 w-7" />,
-    url: 'https://bitwarden.example.com',
+    url: 'https://warden.momoh.de',
     category: 'Security'
   },
   {
@@ -65,24 +65,24 @@ const services: Service[] = [
     name: 'Cloud Storage',
     description: 'Personal cloud storage',
     icon: <Cloud className="h-7 w-7" />,
-    url: 'https://cloud.example.com',
-    category: 'Storage'
+    url: 'https://cloud.momoh.de',
+    category: 'Productivity'
   },
   {
     id: '8',
     name: 'Immich',
     description: 'Google Photos alternative',
     icon: <Image className="h-7 w-7" />,
-    url: 'https://immich.example.com',
+    url: 'https://pic.momoh.de',
     category: 'Media'
   },
   {
     id: '9',
-    name: 'System Settings',
-    description: 'System configuration',
-    icon: <Settings className="h-7 w-7" />,
-    url: 'https://settings.example.com',
-    category: 'Infrastructure'
+    name: 'Social Media (Portfolio)',
+    description: 'Social Media (portfolio)',
+    icon: <Image className="h-7 w-7" />,
+    url: 'https://me.momoh.de',
+    category: 'Personal'
   }
 ];
 
