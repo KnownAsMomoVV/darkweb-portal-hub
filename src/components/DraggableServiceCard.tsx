@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ServiceCard from './ServiceCard';
 import { Service } from '@/types/service';
 import { cn } from '@/lib/utils';
