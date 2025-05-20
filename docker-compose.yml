@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  wishlist-app:
+  dashboard_mo:
     build:
       context: .
       dockerfile: Dockerfile
