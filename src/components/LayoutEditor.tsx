@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Edit, Plus, X, Move } from 'lucide-react';
+import { Edit, Plus, X, Move, Settings } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { Service } from '@/types/service';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
@@ -21,6 +21,7 @@ const LayoutEditor = ({ isEditing, onToggleEdit, categories, services, onSaveLay
   const [password, setPassword] = useState('');
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [showLayoutEditor, setShowLayoutEditor] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [editedCategories, setEditedCategories] = useState<string[]>(categories);
   const [editedServices, setEditedServices] = useState<Service[]>(services);
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -34,6 +35,7 @@ const LayoutEditor = ({ isEditing, onToggleEdit, categories, services, onSaveLay
       setEditedCategories([...categories]);
       setEditedServices([...services]);
       onToggleEdit();
+      setIsAuthenticated(true);
       toast({
         title: "Edit mode enabled",
         description: "You can now customize your layout"
@@ -105,7 +107,6 @@ const LayoutEditor = ({ isEditing, onToggleEdit, categories, services, onSaveLay
   const handleSaveLayout = () => {
     onSaveLayout(editedServices, editedCategories);
     setShowLayoutEditor(false);
-    onToggleEdit();
     toast({
       title: "Layout saved",
       description: "Your custom layout has been saved"
@@ -115,23 +116,53 @@ const LayoutEditor = ({ isEditing, onToggleEdit, categories, services, onSaveLay
   const handleCancelEdit = () => {
     setShowLayoutEditor(false);
     onToggleEdit();
+    setIsAuthenticated(false);
     toast({
       title: "Edit cancelled",
       description: "No changes were saved"
     });
   };
   
+  const handleReopenEditor = () => {
+    setShowLayoutEditor(true);
+  };
+  
   return (
     <>
-      <Button 
-        variant="outline" 
-        size="sm" 
-        className={`fixed bottom-4 right-4 z-50 ${isEditing ? 'bg-primary text-primary-foreground' : ''}`}
-        onClick={() => isEditing ? handleCancelEdit() : setShowPasswordDialog(true)}
-      >
-        <Edit className="mr-2 h-4 w-4" />
-        {isEditing ? "Cancel Edit" : "Edit Layout"}
-      </Button>
+      {isAuthenticated ? (
+        <div className="fixed bottom-4 right-4 z-50 flex gap-2">
+          {!showLayoutEditor && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="bg-primary text-primary-foreground"
+              onClick={handleReopenEditor}
+            >
+              <Settings className="mr-2 h-4 w-4" />
+              Edit Layout
+            </Button>
+          )}
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className={`${isEditing ? 'bg-destructive text-destructive-foreground' : ''}`}
+            onClick={handleCancelEdit}
+          >
+            <X className="mr-2 h-4 w-4" />
+            Exit Editor
+          </Button>
+        </div>
+      ) : (
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="fixed bottom-4 right-4 z-50"
+          onClick={() => setShowPasswordDialog(true)}
+        >
+          <Edit className="mr-2 h-4 w-4" />
+          Edit Layout
+        </Button>
+      )}
       
       <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
         <DialogContent className="sm:max-w-md">
@@ -166,7 +197,13 @@ const LayoutEditor = ({ isEditing, onToggleEdit, categories, services, onSaveLay
         </DialogContent>
       </Dialog>
       
-      <Sheet open={showLayoutEditor} onOpenChange={setShowLayoutEditor}>
+      <Sheet open={showLayoutEditor} onOpenChange={(isOpen) => {
+        // Only allow closing from SheetClose component or explicit buttons
+        // Prevent accidental closing by clicking outside
+        if (!isOpen) {
+          setShowLayoutEditor(false);
+        }
+      }}>
         <SheetContent className="sm:max-w-md overflow-y-auto">
           <SheetHeader>
             <SheetTitle>Customize Layout</SheetTitle>
