@@ -3,14 +3,13 @@ import { useState } from 'react';
 import ServiceCard from './ServiceCard';
 import { Service } from '@/types/service';
 import { cn } from '@/lib/utils';
-import { Edit } from 'lucide-react';
+import { Edit, Link } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
-import { Link } from "lucide-react";
 
 interface DraggableServiceCardProps extends Service {
   isEditing: boolean;
@@ -18,8 +17,6 @@ interface DraggableServiceCardProps extends Service {
   onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
   onDrop: (e: React.DragEvent<HTMLDivElement>, id: string) => void;
   onUpdate?: (id: string, updatedService: Partial<Service>) => void;
-  styleClass?: string;
-  animationClass?: string;
 }
 
 const DraggableServiceCard = ({
@@ -33,9 +30,7 @@ const DraggableServiceCard = ({
   onDragStart,
   onDragOver,
   onDrop,
-  onUpdate,
-  styleClass = '',
-  animationClass = ''
+  onUpdate
 }: DraggableServiceCardProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -104,7 +99,6 @@ const DraggableServiceCard = ({
             <button 
               className="absolute top-2 right-2 bg-primary/80 p-1.5 rounded-full z-10 hover:bg-primary transition-colors"
               onClick={() => setShowEditDialog(true)}
-              type="button"
             >
               <Edit size={14} className="text-white" />
             </button>
@@ -117,8 +111,6 @@ const DraggableServiceCard = ({
           icon={icon}
           url={url}
           category={category}
-          styleClass={styleClass}
-          animationClass={animationClass}
         />
       </div>
       

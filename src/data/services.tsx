@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { 
   Calendar, 
   Database, 
@@ -12,7 +11,6 @@ import {
 } from 'lucide-react';
 import { Service } from '@/types/service';
 
-// Make sure icons are properly rendered as React elements
 const services: Service[] = [
   {
     id: '1',
