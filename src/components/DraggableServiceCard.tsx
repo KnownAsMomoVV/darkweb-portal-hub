@@ -103,6 +103,7 @@ const DraggableServiceCard = ({
             <button 
               className="absolute top-2 right-2 bg-primary/80 p-1.5 rounded-full z-10 hover:bg-primary transition-colors"
               onClick={() => setShowEditDialog(true)}
+              type="button"
             >
               <Edit size={14} className="text-white" />
             </button>

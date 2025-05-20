@@ -78,7 +78,7 @@ const CategorySection = ({
         onClick={() => setIsCollapsed(!isCollapsed)}
       >
         <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
-        <button className="p-1 rounded-full hover:bg-secondary">
+        <button className="p-1 rounded-full hover:bg-secondary" type="button">
           {isCollapsed ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
         </button>
       </div>
