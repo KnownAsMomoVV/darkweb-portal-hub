@@ -24,7 +24,7 @@ const CategorySection = ({
   animationClass = 'animate-scale-in'
 }: CategorySectionProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [categoryServices, setCategoryServices] = useState<Service[]>(services);
+  const [categoryServices, setCategoryServices] = useState<Service[]>([]);
   const [draggedItemId, setDraggedItemId] = useState<string | null>(null);
   
   // Update local state when services prop changes
@@ -35,7 +35,9 @@ const CategorySection = ({
   if (services.length === 0) return null;
   
   const handleUpdateService = (id: string, updatedService: Partial<Service>) => {
-    onUpdateService(id, updatedService);
+    if (onUpdateService) {
+      onUpdateService(id, updatedService);
+    }
   };
   
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
@@ -88,14 +90,19 @@ const CategorySection = ({
           {categoryServices.map((service) => (
             <DraggableServiceCard
               key={service.id}
-              {...service}
+              id={service.id}
+              name={service.name}
+              description={service.description}
+              icon={service.icon}
+              url={service.url}
+              category={service.category}
               isEditing={isEditing}
               onDragStart={handleDragStart}
               onDragOver={handleDragOver}
               onDrop={handleDrop}
               onUpdate={handleUpdateService}
-              styleClass={cardStyleClass}
-              animationClass={animationClass}
+              styleClass={cardStyleClass || ''}
+              animationClass={animationClass || ''}
             />
           ))}
         </div>

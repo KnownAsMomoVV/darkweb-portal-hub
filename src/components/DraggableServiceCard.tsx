@@ -80,6 +80,9 @@ const DraggableServiceCard = ({
     }
   };
   
+  // Make sure we have a valid icon
+  const safeIcon = icon || null;
+  
   return (
     <>
       <div
@@ -113,7 +116,7 @@ const DraggableServiceCard = ({
           id={id}
           name={name}
           description={description}
-          icon={icon}
+          icon={safeIcon}
           url={url}
           category={category}
           styleClass={styleClass}
