@@ -3,13 +3,14 @@ import { useState } from 'react';
 import ServiceCard from './ServiceCard';
 import { Service } from '@/types/service';
 import { cn } from '@/lib/utils';
-import { Edit, Link } from 'lucide-react';
+import { Edit } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
+import { Link } from "lucide-react";
 
 interface DraggableServiceCardProps extends Service {
   isEditing: boolean;
@@ -80,9 +81,6 @@ const DraggableServiceCard = ({
     }
   };
   
-  // Make sure we have a valid icon
-  const safeIcon = icon || null;
-  
   return (
     <>
       <div
@@ -116,7 +114,7 @@ const DraggableServiceCard = ({
           id={id}
           name={name}
           description={description}
-          icon={safeIcon}
+          icon={icon}
           url={url}
           category={category}
           styleClass={styleClass}

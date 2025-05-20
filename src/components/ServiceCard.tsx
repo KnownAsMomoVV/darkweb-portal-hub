@@ -23,9 +23,6 @@ const ServiceCard = ({
 }: ServiceCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   
-  // Ensure icon is a valid React element
-  const iconElement = icon ? icon : null;
-  
   return (
     <a
       href={url}
@@ -47,7 +44,7 @@ const ServiceCard = ({
           isHovered ? "bg-white/20" : ""
         )}
       >
-        {iconElement}
+        {icon}
       </div>
       
       <h3 className="font-medium text-lg mb-1">{name}</h3>
