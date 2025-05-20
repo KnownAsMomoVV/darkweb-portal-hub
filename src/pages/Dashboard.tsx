@@ -8,19 +8,24 @@ import { Service } from '@/types/service';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const Dashboard = () => {
-  const [filteredServices, setFilteredServices] = useState<Service[]>(services);
+  // Load custom layout from local storage if available
+  const [serviceLayout, setServiceLayout] = useLocalStorage<Service[]>('dashboard-services-layout', services);
+  const [categoryLayout, setCategoryLayout] = useLocalStorage<string[]>('dashboard-categories-layout', []);
+  
+  const [filteredServices, setFilteredServices] = useState<Service[]>(serviceLayout);
   const [categories, setCategories] = useState<string[]>([]);
   const [isEditingLayout, setIsEditingLayout] = useState(false);
   
-  // Load custom layout from local storage if available
-  const [serviceLayout, setServiceLayout] = useLocalStorage<Service[]>('dashboard-services-layout', services);
-  
-  // Group services by category
+  // Group services by category and set up categories
   useEffect(() => {
-    const uniqueCategories = [...new Set(serviceLayout.map(service => service.category))];
+    // If we have saved categories, use those; otherwise, extract from services
+    const uniqueCategories = categoryLayout.length > 0 
+      ? categoryLayout 
+      : [...new Set(serviceLayout.map(service => service.category))];
+      
     setCategories(uniqueCategories);
     setFilteredServices(serviceLayout);
-  }, [serviceLayout]);
+  }, [serviceLayout, categoryLayout]);
   
   const handleSearch = (term: string) => {
     if (!term) {
@@ -36,26 +41,17 @@ const Dashboard = () => {
     setFilteredServices(filtered);
   };
   
-  const handleReorderServices = (categoryName: string, reorderedServices: Service[]) => {
-    const updatedLayout = [...serviceLayout];
-    
-    // Replace services in the specified category with reordered ones
-    reorderedServices.forEach(service => {
-      const index = updatedLayout.findIndex(s => s.id === service.id);
-      if (index !== -1) {
-        updatedLayout[index] = service;
-      }
-    });
-    
-    setServiceLayout(updatedLayout);
-  };
-  
   const handleUpdateService = (id: string, updatedService: Partial<Service>) => {
     const updatedLayout = serviceLayout.map(service => 
       service.id === id ? { ...service, ...updatedService } : service
     );
     
     setServiceLayout(updatedLayout);
+  };
+  
+  const handleSaveLayout = (newServices: Service[], newCategories: string[]) => {
+    setServiceLayout(newServices);
+    setCategoryLayout(newCategories);
   };
   
   return (
@@ -80,7 +76,7 @@ const Dashboard = () => {
                   title={category}
                   services={filteredServices.filter(s => s.category === category)}
                   isEditing={isEditingLayout}
-                  onReorderServices={handleReorderServices}
+                  onReorderServices={() => {}}
                   onUpdateService={handleUpdateService}
                 />
               ))}
@@ -91,6 +87,9 @@ const Dashboard = () => {
         <LayoutEditor 
           isEditing={isEditingLayout}
           onToggleEdit={() => setIsEditingLayout(!isEditingLayout)}
+          categories={categories}
+          services={serviceLayout}
+          onSaveLayout={handleSaveLayout}
         />
       </div>
     </div>
