@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  wishlist-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9898:80" # Map host port 8989 to container port 80
+      # You can change 9898 to any other non-common port you prefer.
+    restart: unless-stopped
+    container_name: dashboard_mo
