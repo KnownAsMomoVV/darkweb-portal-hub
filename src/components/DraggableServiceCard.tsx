@@ -17,6 +17,8 @@ interface DraggableServiceCardProps extends Service {
   onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
   onDrop: (e: React.DragEvent<HTMLDivElement>, id: string) => void;
   onUpdate?: (id: string, updatedService: Partial<Service>) => void;
+  styleClass?: string;
+  animationClass?: string;
 }
 
 const DraggableServiceCard = ({
@@ -30,7 +32,9 @@ const DraggableServiceCard = ({
   onDragStart,
   onDragOver,
   onDrop,
-  onUpdate
+  onUpdate,
+  styleClass = '',
+  animationClass = ''
 }: DraggableServiceCardProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -111,6 +115,8 @@ const DraggableServiceCard = ({
           icon={icon}
           url={url}
           category={category}
+          styleClass={styleClass}
+          animationClass={animationClass}
         />
       </div>
       
