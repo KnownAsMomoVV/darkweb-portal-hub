@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import CategorySection from '@/components/CategorySection';
@@ -42,8 +41,16 @@ const Dashboard = () => {
   };
   
   const handleUpdateService = (id: string, updatedService: Partial<Service>) => {
+    const serviceToUpdate = serviceLayout.find(service => service.id === id);
+    if (!serviceToUpdate) return;
+
     const updatedLayout = serviceLayout.map(service => 
-      service.id === id ? { ...service, ...updatedService } : service
+      service.id === id ? { 
+        ...service, 
+        ...updatedService,
+        // Keep the original icon reference to maintain compatibility
+        icon: serviceToUpdate.icon
+      } : service
     );
     
     setServiceLayout(updatedLayout);

@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { Settings } from 'lucide-react';
 
 interface ServiceCardProps {
   id: string;
@@ -13,6 +14,9 @@ interface ServiceCardProps {
 
 const ServiceCard = ({ name, description, icon, url }: ServiceCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  
+  // Ensure icon is a valid React element
+  const safeIcon = React.isValidElement(icon) ? icon : <Settings className="h-7 w-7" />;
   
   return (
     <a
@@ -34,7 +38,7 @@ const ServiceCard = ({ name, description, icon, url }: ServiceCardProps) => {
           isHovered ? "bg-white/20" : ""
         )}
       >
-        {icon}
+        {safeIcon}
       </div>
       
       <h3 className="font-medium text-lg mb-1">{name}</h3>

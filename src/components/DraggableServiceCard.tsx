@@ -3,7 +3,7 @@ import { useState } from 'react';
 import ServiceCard from './ServiceCard';
 import { Service } from '@/types/service';
 import { cn } from '@/lib/utils';
-import { Edit, Link } from 'lucide-react';
+import { Edit, Link, Calendar, Database, Cloud, Image, ShoppingCart, Monitor, Lock, Settings } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,22 @@ interface DraggableServiceCardProps extends Service {
   onDrop: (e: React.DragEvent<HTMLDivElement>, id: string) => void;
   onUpdate?: (id: string, updatedService: Partial<Service>) => void;
 }
+
+// Helper function to get icon component by name
+const getIconComponent = (iconName: string) => {
+  const iconMap: Record<string, React.ReactNode> = {
+    Calendar: <Calendar className="h-7 w-7" />,
+    Database: <Database className="h-7 w-7" />,
+    Cloud: <Cloud className="h-7 w-7" />,
+    Image: <Image className="h-7 w-7" />,
+    ShoppingCart: <ShoppingCart className="h-7 w-7" />,
+    Monitor: <Monitor className="h-7 w-7" />,
+    Lock: <Lock className="h-7 w-7" />,
+    Settings: <Settings className="h-7 w-7" />,
+  };
+
+  return iconMap[iconName] || <Settings className="h-7 w-7" />;
+};
 
 const DraggableServiceCard = ({
   id,
@@ -76,6 +92,11 @@ const DraggableServiceCard = ({
     }
   };
   
+  // Ensure icon is a valid React element
+  const safeIcon = typeof icon === 'string' 
+    ? getIconComponent(icon as string)
+    : (React.isValidElement(icon) ? icon : <Settings className="h-7 w-7" />);
+  
   return (
     <>
       <div
@@ -108,7 +129,7 @@ const DraggableServiceCard = ({
           id={id}
           name={name}
           description={description}
-          icon={icon}
+          icon={safeIcon}
           url={url}
           category={category}
         />
