@@ -10,6 +10,8 @@ interface CategorySectionProps {
   isEditing: boolean;
   onReorderServices: (categoryName: string, reorderedServices: Service[]) => void;
   onUpdateService: (id: string, updatedService: Partial<Service>) => void;
+  cardStyleClass?: string;
+  animationClass?: string;
 }
 
 const CategorySection = ({ 
@@ -17,7 +19,9 @@ const CategorySection = ({
   services, 
   isEditing, 
   onReorderServices,
-  onUpdateService 
+  onUpdateService,
+  cardStyleClass = '',
+  animationClass = 'animate-scale-in'
 }: CategorySectionProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [categoryServices, setCategoryServices] = useState<Service[]>(services);
@@ -56,6 +60,8 @@ const CategorySection = ({
               onDragOver={() => {}}
               onDrop={() => {}}
               onUpdate={handleUpdateService}
+              styleClass={cardStyleClass}
+              animationClass={animationClass}
             />
           ))}
         </div>
