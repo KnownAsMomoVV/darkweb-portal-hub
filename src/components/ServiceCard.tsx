@@ -10,9 +10,10 @@ interface ServiceCardProps {
   icon: React.ReactNode;
   url: string;
   category: string;
+  iconColor?: string;
 }
 
-const ServiceCard = ({ name, description, icon, url }: ServiceCardProps) => {
+const ServiceCard = ({ name, description, icon, url, iconColor = "" }: ServiceCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   
   // Ensure icon is a valid React element
@@ -35,7 +36,8 @@ const ServiceCard = ({ name, description, icon, url }: ServiceCardProps) => {
         className={cn(
           "w-14 h-14 mb-4 flex items-center justify-center rounded-full bg-secondary",
           "transition-all duration-300 group-hover:text-white",
-          isHovered ? "bg-white/20" : ""
+          isHovered ? "bg-white/20" : "",
+          iconColor
         )}
       >
         {safeIcon}
